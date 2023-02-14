@@ -9,11 +9,19 @@ import {
 // main function for creating a Single Option
 export function addSingleOption(questionId, pointId, text, itemsList, addClas = ' ') {
     let itemsName = "inputpoint_" + questionId + "_" + pointId;
+    let itemsRelatedName = "related_" + questionId + "_" + pointId;
     let itemHtml =
-        '<div class="radio-item ' + addClas + '">' +
+        '<div class="radio-item' + addClas + '">' +
         '    <div class="remove-item"></div>' +
         '    <textarea name="' + itemsName + '" rows="1" placeholder="������� ������">' + text + '</textarea>' +
-        `    <div class="radio-item-visability"></div>` +
+        '<div class="hide-element__input">' +
+        '<div class="option-item" style="width: 300px; position: absolute; left: -40px; top: 50px;">' +
+        '<div class="value">' +
+        '<input placeholder="Скрыть элемент No:" class="__textarea" type="text"  name="'+ itemsRelatedName +'">' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="radio-item-visability"></div>' +
         '</div>';
     // <div className="radio-item-upload-img">
     // <input type="file" accept="image/png, image/gif, image/jpeg" name="uploadimage_${questionId + " _" + pointId}"
@@ -181,20 +189,14 @@ export function createSingleChoiceToHide(question, singleName) {
             <div class="single-option-choice" data-id="${singleName}_1">
                 <div class="single-property-row">
                     <div class="single-answer">
-                        <select class="customselect single-answer-select">
+                        <select class="customselect single-hide-answer-select">
                             <option value=""></option>
                         </select>
                     </div>
                   
                     <div class="single-action">
-                        <select class="customselect single-action-select">
-                            <option selected value="">${vars.vibratDeystvie}</option>
-                            <option value="move-to-question">${vars.pereitiKVovposu}</option>
-                            <option value="move-to-chapter">${vars.pereytiKRazdelu}</option>
-                            <option value="hide-question">${vars.scritVoprosi}</option>
-			    <option value="hide-chapter">${vars.scritRazdel}</option>
-                            <option value="ask-additional-question">${vars.zadatDopVopros}</option>
-                            <option value="complete-poll">${vars.zavershitOpros}</option>
+                        <select class="customselect single-hide-action-select" multiple="multiple">
+                            <option value=""></option>
                         </select>
                     </div>
                     <div class="remove-single-choice"></div>
@@ -203,7 +205,7 @@ export function createSingleChoiceToHide(question, singleName) {
             <p class="add-new-single-choice">Добавить вопрос</p>
         </div>`;
     $(singleOptionBlock).insertAfter($(question).find('.single-choice-row'));
-    createSelectOfSingleAnswer(question)
+
     customSelectActive();
 }
 
@@ -213,19 +215,13 @@ export function createSingleOptionChoice(question, singleOptionName, singleOptio
         `<div class="single-option-choice" data-id="${singleOptionName}_${singleNameIndex}">
             <div class="single-property-row">
                 <div class="single-answer">
-                    <select class="customselect single-answer-select">
+                    <select class="customselect single-hide-answer-select">
                         <option value=""></option>
                     </select>
                 </div>
                 <div class="single-action">
-                    <select class="customselect single-action-select">
-                        <option selected value="">${vars.vibratDeystvie}</option>
-                        <option value="move-to-question">${vars.pereitiKVovposu}</option>
-                        <option value="move-to-chapter">${vars.pereytiKRazdelu}</option>
-                        <option value="hide-question">${vars.scritVoprosi}</option>
-			<option value="hide-chapter">${vars.scritRazdel}</option>
-                        <option value="ask-additional-question">${vars.zadatDopVopros}</option>
-                        <option value="complete-poll">${vars.zavershitOpros}</option>
+                    <select class="customselect single-hide-action-select" multiple="multiple">
+                        <option value=""></option>
                     </select>
                 </div>
                 <div class="remove-single-choice"></div>
@@ -241,7 +237,7 @@ export function createSingleOptionChoice(question, singleOptionName, singleOptio
     // }
 
     $(singleOption).appendTo($(question).find('.single-options-box-choice')).insertBefore('.add-new-single-choice');
-        createSelectOfSingleAnswer(question)
+
         customSelectActive();
 }
 
@@ -298,6 +294,69 @@ export function createSelectOfSingleAnswer(question) {
     }
     customSelectActive();
 }
+// (ДЛЯ HIDE QUESTION) функция которая делает селект из вопросов
+export function createSelectOfSingleQuestionsForHide(question) {
+    let singlesList = $('.question-wrap').filter('.question-single, .question-dropdown')
+    let arrQuestions = singlesList.map((id, el) => {
+        return {
+            name: $(el).find('.question-name textarea').val(),
+            id: $(el)[0].dataset.id,
+            uniqueName: $(el).find('.question-name').find('textarea').prop('name')
+        }
+    })
+    let selectsQuestionName = $('.single-answer')
+    selectsQuestionName.each(function (id, el) {
+        let select = $(el).find('select')
+        let customSelect = $(el).find('.select-options')
+        select.html("")
+        customSelect.html("")
+        arrQuestions.each((id, question) => {
+            console.log(id, question)
+            console.log($(el))
+            if (question.id == $(el).parents('.question-wrap')[0].dataset.id) {
+                return
+            }
+            let createdOption = `<option value="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.name}</option>`;
+            let createdLi = `<li rel="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.name}</li>`;
+            select.append(createdOption)
+            customSelect.append(createdLi)
+        })
+    })
+}
+
+// export function refreshAnswersForSingleQuestionsForHide() {
+//     let targetQuestions = $('.questions-list')
+//         .find('.question-wrap')
+//         .not('.focus')
+//         .filter('.question-single, .question-dropdown')
+//     let selectedQuestion = $('.single-options-box-choice .single-answer select option:selected')
+//     let id = selectedQuestion.data('question-for-hide')
+//
+//     let targetAnswerSelect = $('.single-option-choice').find('.single-hide-action-select')
+//     let targetAnswerList = targetAnswerSelect.parents('.single-action').find('ul')
+//
+//     targetAnswerSelect.html("")
+//     targetAnswerList.html("")
+//
+//     if($(targetQuestions[id]).hasClass('question-single')){
+//         let questionAnswersList = $(targetQuestions[id]).find('.radio-item textarea')
+//         for (let i = 0; i < questionAnswersList.length; i++){
+//             let optionAnswer = `<option value="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</option>`
+//             let liAnswer = `<li rel="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</li>`
+//             targetAnswerSelect.append(optionAnswer)
+//             targetAnswerList.append(liAnswer)
+//         }
+//     }else if($(targetQuestions[id]).hasClass('question-dropdown')){
+//         let questionAnswersList = $(targetQuestions[id]).find('.dropdown-wrap select option').not(':last')
+//         for (let i = 0; i < questionAnswersList.length; i++){
+//             let optionAnswer = `<option value="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</option>`
+//             let liAnswer = `<li rel="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</li>`
+//             targetAnswerSelect.append(optionAnswer)
+//             targetAnswerList.append(liAnswer)
+//         }
+//     }
+// }
+
 
 export function removeSingleOptionBlock(question, singleOption, singleOptionsCount) {
     if (singleOptionsCount > 1) {
@@ -309,6 +368,14 @@ export function removeSingleOptionBlock(question, singleOption, singleOptionsCou
 }
 
 export function removeSingleChoiceBlock(question, singleOption, singleOptionsCount) {
+    if (singleOptionsCount > 1) {
+        singleOption.remove();
+    } else {
+        question.find('.single-options-box-choice').remove();
+        question.find('.add-single-choice').prop('checked', false);
+    }
+}
+export function removeSingleChoiceOption(question, singleOption, singleOptionsCount) {
     if (singleOptionsCount > 1) {
         singleOption.remove();
     } else {

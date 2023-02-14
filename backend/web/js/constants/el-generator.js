@@ -187,6 +187,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                         </div>
                         ${required_Set}
                     </div>
+                    <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>`
             break;
         case 'scale':
@@ -287,6 +299,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                             </div> -->
                         </div>   
                     </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>`
             break;
         case 'nps':
@@ -386,6 +410,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                                 </label>
                             </div>
                         </div>
+                                            <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                     </div>`
             break;
         case 'dropdown':
@@ -394,13 +430,13 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                     <div class="box-shadow question-content">
                         ${topEL}
                         ${copyQuestionBTN}
-                        <div class="dropdown-wrap">
+                        <div class="dropdown-wrap customselect-wrapper">
                             <select class="customselect">
                                 <option value=""></option>
                             </select>
                         </div>
                         <div class="optins-list">
-                            <div class="option-item">
+                            <div class="option-item" style="width: 50%;">
                                 <div class="inputpoint-body">
                                     <div class="number">1.</div>
                                     <div class="value">
@@ -429,6 +465,14 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                                                 <option value></option>
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="hide-element__input" style="width: 300px;margin-top: 20px;">
+                                    <div class="value">
+                                        <input placeholder="Скрыть элемент No: только цифры и запятая"
+                                            class="__textarea input-hiders" type="text"
+                                            name="related_${id}_1"
+                                            >
                                     </div>
                                 </div>
                             </div>
@@ -487,6 +531,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                             </div>
                             <label class="switch">
                                 <input type="checkbox" name="mix-answers_${id}" class="mix-answers">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
                                 <span class="slider round"></span>
                             </label>
                         </div>
@@ -575,6 +631,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                             </label>
                         </div>
                     </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>`
             break;
         case 'name':
@@ -597,6 +665,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                     </div>
                     <div class="box-shadow question-settings">
                         ${required_Set}
+                    </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>`
             break;
@@ -651,6 +731,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                     <div class="box-shadow question-settings">
                         ${required_Set}
                     </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>`
             break;
         case 'phone':
@@ -666,6 +758,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                     </div>
                     <div class="box-shadow question-settings">
                         ${required_Set}
+                    </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>`
             break;
@@ -684,6 +788,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                     <div class="box-shadow question-settings">
                         ${required_Set}
                     </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>`
             break;
         default:
@@ -695,6 +811,18 @@ export function generateQestionTypeElement(type, questionIndex, uniqueId, chapte
                     </div>
                     <div class="box-shadow question-settings">
                         ${required_Set}
+                    </div>
+                                        <div class="box-shadow question-view-hide">
+                    <div class="question-view-hide__title">Скрыть вопрос</div>
+                    <div class="switch-row single-choice-row">
+                            <div class="label">
+                               При ответе на вопрос:
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="add-single-choice" name="add-single-choice_${id}">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>`
     }

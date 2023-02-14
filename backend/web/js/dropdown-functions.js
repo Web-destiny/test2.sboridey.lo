@@ -68,13 +68,14 @@ export function addNewOption(question, className = "", value = "", last = true) 
     let optionList = question.find('.optins-list');
     let questionId = question.attr('data-id');
     let optionId = parseInt(optionList.children().length) + 1;
+    let itemsRelatedName = "related_" + questionId + "_" + optionId;
     let select = question.find('.dropdown-wrap select');
     let customSelect = question.find('.dropdown-wrap');
     if (last === false) {
         optionId = optionId - 1;
     }
     let optionHtml =
-        `<div class="option-item ${className}">
+        `<div class="option-item ${className}" style="width: 50%;">
             <div class="inputpoint-body">
                 <div class="number">${optionId}.</div>
                 <div class="value">
@@ -105,6 +106,13 @@ export function addNewOption(question, className = "", value = "", last = true) 
                     </div>
                 </div>                   
             </div>
+            <div class="hide-element__input" style="width: 300px; margin-top: 20px;">
+                        <div class="value">
+                            <input placeholder="Скрыть элемент No: только цифры и запятая"
+                                    class="__textarea" type="text"
+                                    name="${itemsRelatedName}">
+                        </div>
+                    </div>
         </div>`;
     $(optionHtml).insertAfter(optionList.find(`.option-item:nth-child(${optionId - 1})`));
     let selectHtml = `<option value="${value}"></option>`;

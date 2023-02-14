@@ -69,9 +69,11 @@ use common\constructor\BaseElement; ?>
             <?php $n = 1; foreach ($inputPoint as $key => $item): ?>
                 <section style="display: flex;justify-content: space-between;flex-wrap: wrap;">
                     <div class="option-item" style="width: 50%;">
-                        <div class="number"><?= $n; ?>.</div>
-                        <div class="value">
-                            <input type="text" name="<?= $item['name'] ?>" value="<?= $item['value'] ?>">
+                        <div class="inputpoint-body">
+                            <div class="number"><?= $n; ?>.</div>
+                            <div class="value">
+                                <input type="text" name="<?= $item['name'] ?>" value="<?= $item['value'] ?>">
+                            </div>
                         </div>
                     </div>
                     <div class="option-item" style="width: 300px">

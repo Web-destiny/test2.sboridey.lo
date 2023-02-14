@@ -16,7 +16,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'department_id')->textInput(['readonly'=> true]) ?>
+    <div class="form-group">
+        <?php  echo $departamenObj->location->name . ' --- ' . $departamenObj->name;  ?>
+    </div>
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

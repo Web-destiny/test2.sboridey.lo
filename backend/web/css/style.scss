@@ -8195,3 +8195,56 @@ body {
     }
   }
 }
+
+.page-wrap .constr-wrap .questions-box .question-wrap .single-options-box-choice .single-option-choice .single-property-row, .page-wrap .constr-wrap .questions-box .question-wrap.question-multiple .single-options-box-choice .single-option-choice .single-property-row {
+  display: flex;
+  align-items: center;
+}
+
+.page-wrap .constr-wrap .questions-box .question-wrap .single-options-box-choice .single-option-choice .single-property-row .single-action, .page-wrap .constr-wrap .questions-box .question-wrap.question-multiple .single-options-box-choice .single-option-choice .single-property-row .single-action {
+  min-width: 250px;
+  margin-right: 20px;
+}
+
+.page-wrap .constr-wrap .questions-box .question-wrap .single-options-box-choice .single-option-choice .single-property-row .single-answer, .page-wrap .constr-wrap .questions-box .question-wrap.question-multiple .single-options-box-choice .single-option-choice .single-property-row .single-answer {
+  width: 150px;
+  margin-right: 20px;
+}
+.page-wrap .constr-wrap .questions-box .question-wrap .single-options-box-choice .single-option-choice, .page-wrap .constr-wrap .questions-box .question-wrap.question-multiple .single-options-box-choice .single-option-choice {
+  margin-bottom: 10px;
+}
+
+.page-wrap .constr-wrap .questions-box .question-wrap .single-options-box-choice .add-new-single-choice, .page-wrap .constr-wrap .questions-box .question-wrap.question-multiple .single-options-box-choice .add-new-single-choice {
+  background: linear-gradient(90deg, #b27af8 0%, #7fa1f8 100%);
+  border-radius: 25px;
+  padding: 15px 30px;
+  border: none;
+  outline: none;
+  font-family: "Gilroy", Verdana, Tahoma, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 13px;
+  color: #ffffff;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
+  margin-top: 10px;
+}
+.__textarea {
+  overflow: hidden;
+  border: none;
+  outline: none;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #E5E5E5;
+  font-family: "Gilroy", Verdana, Tahoma, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 15px;
+  color: #000000;
+  width: 100%;
+  max-width: 500px;
+  height: 25px;
+}
+

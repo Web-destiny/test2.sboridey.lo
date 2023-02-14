@@ -59,9 +59,9 @@ use common\constructor\BaseElement; ?>
                     <div>
                         <div class="option-item" style="width: 300px; position: absolute; left: -40px; top: 30px;">
                             <div class="value">
-                            <textarea placeholder="Скрыть элемент No:"
+                            <input placeholder="Скрыть элемент No:"
                                       class="__textarea" type="text"
-                                      name="<?= $inputPointRelated[$key]['nameRelated'] ?>"><?= $inputPointRelated[$key]['valueRelated'] ?></textarea>
+                                      name="<?= $inputPointRelated[$key]['nameRelated'] ?>"><?= $inputPointRelated[$key]['valueRelated'] ?>
                             </div>
                         </div>
                     </div>

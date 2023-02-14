@@ -107,7 +107,12 @@ import {
     checkSingleDiapason,
     removeAnswerImgSingle,
     hideChapterFromSingle,
-    createSingleChoiceToHide, removeSingleChoiceBlock, createSingleOptionChoice
+    createSingleChoiceToHide,
+    removeSingleChoiceBlock,
+    createSingleOptionChoice,
+    removeSingleChoiceOption,
+    refreshSingleChoiceElemNames,
+    createSelectOfSingleQuestionsForHide
 } from "./single-functionsss.js"
 
 jQuery(document).ready(function () {
@@ -210,6 +215,7 @@ jQuery(document).ready(function () {
         setQustionSortable(onEnd);
     }
 
+
     //show chapters list
 
     //drag chapter
@@ -227,6 +233,9 @@ jQuery(document).ready(function () {
         connectToSortable: '.chapter-questions-list',
         containment: '.constr-wrap',
     });
+
+    let fakeInput = '<input type="number" name="fakeInput" class="fakeInput" value="0" hidden>';
+    $('.questions-list').append(fakeInput);
 
     //dropped question
     $('.questions-box').droppable({
@@ -257,6 +266,7 @@ jQuery(document).ready(function () {
                     }
                     if (type == "single") {
                         addListSingleQuestion.call($(el))
+                        createSelectOfSingleQuestionsForHide.call($(el))
                     }
                     if (type == "dropdown") {
                         addListDropdownQuestion.call($(el))
@@ -266,20 +276,32 @@ jQuery(document).ready(function () {
                     $(currentCahpter).find('.chapter-head').removeClass('has-error');
                     customSelectActive();
                 } else {
+
                     if (appendInde === 'last') {
                         id = children.length + 1;
                     } else if (appendInde < 0) {
                         id = 1;
                     } else {
+                        makeFakeChapter()
                         id = appendInde + 1;
                     }
                     if (type && id) {
-                        addQuestion(type, appendInde, id);
-                        const onEnd = (evt) => {
-                            let questionsList = $(evt.target);
-                            refreshQuestionsId(questionsList);
-                        };
-                        setQustionSortable(onEnd);
+                        // addQuestion(type, appendInde, id);
+                        // const onEnd = (evt) => {
+                        //     let questionsList = $(evt.target);
+                        //     refreshQuestionsId(questionsList);
+                        // };
+                        // setQustionSortable(onEnd);
+
+
+                        let uniqueId = getUniqueID();
+                        const {
+                            chapterIndex,
+                            chapterQuestionIndex
+                        } = getIndexOfDroppableQuestionInChapter(eventTop);
+
+                        let el = generateQestionTypeElement(type, chapterQuestionIndex + 1, uniqueId, chapterIndex + 1);
+                            addQuestionToChapter(el, chapterIndex, chapterQuestionIndex);
                     }
                 }
             }
@@ -297,6 +319,20 @@ jQuery(document).ready(function () {
             }
         }
     });
+
+    function makeFakeChapter(){
+        let detectQuestionsLenth = $('.question-wrap').length;
+        const insertIndex = $(event.toElement).hasClass('chapter-wrapper') ?
+            $(event.toElement).attr('data-index') :
+            $(event.toElement).parents('.chapter-wrapper').attr('data-index');
+        addChapter(insertIndex, detectQuestionsLenth);
+        customSelectActive();
+        setSortbaleRanging();
+        setSortbaleSingleItems();
+        $('.chapter-head').attr('hidden', true)
+        $('.chapter-wrapper .chapter-questions-list').css({'padding-left': '0'})
+        $('.fakeInput').attr('value', 1)
+    }
 
     // if chapter-list > 0 set chapter-position-btn to visible
     if ($('.chapter-wrapper').length > 0) {
@@ -377,6 +413,9 @@ jQuery(document).ready(function () {
 
     //add question by click
     $('.constr-wrap').on('click', '.listbox .list-item', function (e) {
+        if(!$('.questions-list .chapter-wrapper').length){
+            makeFakeChapter()
+        }
         let type = $(this).attr('data-type');
         let appendInde = "last";
         let id = hasChapter ?
@@ -485,6 +524,7 @@ jQuery(document).ready(function () {
         refreshQuestionsId();
         if (type == "single") {
             addListSingleQuestion.call($(el))
+            createSelectOfSingleQuestionsForHide.call($(el))
         }
         if (type == "dropdown") {
             addListDropdownQuestion.call($(el))
@@ -551,11 +591,16 @@ jQuery(document).ready(function () {
 
     $('.constr-wrap').on('change', '.control-panel .question-visability input[type="checkbox"]', function () {
        if($(this).is(':checked')){
-           $('.question-view-hide').fadeIn(300);
+           $(this).closest('.question-wrap').find('.question-view-hide').fadeIn(300);
        }else{
-           $('.question-view-hide').fadeOut(300);
+           $(this).closest('.question-wrap').find('.question-view-hide').fadeOut(300);
        }
     });
+
+    // $('.constr-wrap').on('change', '.question-view-hide .single-option-choice select', function () {
+    //    refreshAnswersForSingleQuestionsForHide()
+    // });
+
 
     // question in focus
     $('.constr-wrap').on('click', '.question-wrap', function (e) {
@@ -570,6 +615,14 @@ jQuery(document).ready(function () {
     //remove question
     $('.constr-wrap').on('click', '.question-wrap .remove-question', function () {
         let question = $(this).parents('.question-wrap');
+        if ($('.chapter-questions-list').children().length == 1 ){
+            const $chapter = $('.chapter-wrapper');
+            deleteChapter($chapter);
+            if ($('.chapter-wrapper').length === 0) {
+                $('.questions-box').addClass('empty');
+            }
+            $('.fakeInput').attr('value', 0)
+        }
         removeQuestion(question);
     });
 
@@ -787,6 +840,7 @@ jQuery(document).ready(function () {
                 addSingleOption(questionId, pointId, text, itemsList);
                 addSingleAlternative(questionId, pointId, alternativesList);
                 addListSingleQuestion()
+                createSelectOfSingleQuestionsForHide()
             }
             clear_form_elements($(this).parents('.input-new-item-wrap'));
             createSelectOfSingleAnswer($(thisQuestion[0]))
@@ -872,6 +926,7 @@ jQuery(document).ready(function () {
     //after change name for question rename options for alternative selector
     $('.content-wrap').on('change', '.questions-list .question-single textarea', function (e) {
         addListSingleQuestion()
+        createSelectOfSingleQuestionsForHide()
     })
 
     //get list of answer form target question
@@ -891,6 +946,68 @@ jQuery(document).ready(function () {
             customSelect.append(createdLi)
         })
     })
+
+    // слушатель на лист ответов вопросов в функции "eye-hide" для сингла
+    $('.content-wrap').on('click', '.questions-list .question-wrap .single-answer li', function (e) {
+        let targetQuestion = $('.questions-list').find(`.question-wrap[data-id=${$(this).data('id')}]`)
+        if(targetQuestion.hasClass('question-single')){
+            let listAnswer = targetQuestion.find('.radio-btns-wrapper .radio-item textarea')
+            let targetAnswerSelect = $(this).parents('.single-option-choice').find('.single-action')
+            getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer)
+        }else if(targetQuestion.hasClass('question-dropdown')){
+            let listAnswer = targetQuestion.find('.dropdown-wrap .select-options li')
+            let targetAnswerSelect = $(this).parents('.single-option-choice').find('.single-action')
+            getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer)
+        }
+    })
+    //функция которая выводит лист вариантов ответов для селекта с вопросами hide
+    function getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer){
+        let select = targetAnswerSelect.find('select')
+        let customSelect = targetAnswerSelect.find('.select-options')
+        select.html("")
+        customSelect.html("")
+        listAnswer.each(function (id, el) {
+            let answerText;
+            if($(el).text() != ''){
+                answerText = $(el).text()
+                let textareaName = $(el).prop('name')
+                if(textareaName == undefined){
+                    let dropOptionLi =  $(el).closest('.question-dropdown').find('.optins-list .option-item')[id]
+                    textareaName = $(dropOptionLi).find('.inputpoint-body input').prop('name')
+                }
+                let createdOption = `<option value="${answerText}" name="${textareaName}">${answerText}</option>`;
+                let createdLi = `<li rel="${answerText}" name="${textareaName}">${answerText}</li>`;
+                select.append(createdOption)
+                customSelect.append(createdLi)
+            }else{
+                return
+            }
+        })
+    }
+
+    // кладу номер вопроса для скрытия в инпут (армена) по выбору в селекте
+    $('.content-wrap').on('click', '.questions-list .question-wrap .single-action li', function (e) {
+        let nameLi = $(this).attr('name')
+        let li = $(this)
+        let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+        if($(this).hasClass('active')){
+            removeValuesInHideInputs (nameLi, allInputs)
+        }else{
+            $(allInputs).each(function (item) {
+                let nameTextarea = $(this).attr('name')
+                if(nameLi == nameTextarea){
+                    let selectedQuestionAttr = $(li).closest('.question-wrap').find('.question-name textarea').attr('name').replace(/\D/g,'')
+                    if($(this).parent().hasClass('radio-item')){
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                    }else if($(this).parent().hasClass('value')){
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                    }
+                }
+            })
+        }
+    })
+
+
 
     //show single options add other or comment
     $('.content-wrap').on('change', '.question-wrap .show-hidden-opt', function (e) {
@@ -968,12 +1085,16 @@ jQuery(document).ready(function () {
         }
     });
 
-    $('.content-wrap').on('change', '.question-single .question-view-hide .add-single-choice', function () {
+    $('.content-wrap').on('change', '.question-wrap .question-view-hide .add-single-choice', function () {
         let question = $(this).parents('.question-wrap');
         let singleName = question.attr('data-id');
         if ($(this).is(':checked')) {
             createSingleChoiceToHide(question, singleName);
+            createSelectOfSingleQuestionsForHide(question)
         } else {
+            let nameLi = $(this).closest('.single-choice-row').next().find('.select-options .active')
+            let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+            removeValuesInHideInputs(nameLi, allInputs)
             question.find('.single-options-box-choice').remove();
             //question.find('.question-content .free-answers').remove();
         }
@@ -1065,23 +1186,46 @@ jQuery(document).ready(function () {
     })
 
     /** Add one more single choice */
-    $('.content-wrap').on('click', '.question-single .add-new-single-choice', function () {
+    $('.content-wrap').on('click', '.question-wrap .add-new-single-choice', function () {
         //let singleNameIndex = 1;
         let question = $(this).parents('.question-wrap');
         let singleOptionName = question.attr('data-id');
         const singleOptionsCount = $(this).closest('.single-option-choice').find('.single-answer .single-answer-select option').length;
         const newSingleOptionsCount = question.find('.single-option-choice').length;
         createSingleOptionChoice(question, singleOptionName, singleOptionsCount, newSingleOptionsCount);
+        createSelectOfSingleQuestionsForHide(question)
     });
 
     /** remove single choice */
     $('.content-wrap').on('click', '.question-single .remove-single-choice', function () {
         const question = $(this).parents('.question-wrap');
-        const singleOption = $(this).closest('.single-option');
-        const singleOptionsCount = question.find('.single-options-box .single-option').length;
-        removeSingleChoiceBlock(question, singleOption, singleOptionsCount)
+        const singleOption = $(this).closest('.single-option-choice');
+        const singleOptionsCount = question.find('.single-options-box-choice .single-option-choice').length;
+
+        let nameLi = $(this).prev().find('.select-options .active')
+        let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+        removeValuesInHideInputs(nameLi, allInputs)
+
+        removeSingleChoiceOption(question, singleOption, singleOptionsCount)
         refreshSingleChoiceElemNames(question);
     });
+
+    function removeValuesInHideInputs (selectedLi){
+        $(selectedLi).each(function () {
+            let nameLi = $(this).attr('name')
+            let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+            $(allInputs).each(function () {
+                let nameTextarea = $(this).attr('name')
+                if (nameLi == nameTextarea) {
+                    if($(this).parent().hasClass('radio-item')){
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
+                    }else if($(this).parent().hasClass('value')){
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
+                    }
+                }
+            })
+        });
+    }
 
     /** Add one more single option */
     $('.content-wrap').on('click', '.question-single .add-new-single-option', function () {
@@ -2102,6 +2246,7 @@ jQuery(document).ready(function () {
             }
         }
         addListSingleQuestion()
+        createSelectOfSingleQuestionsForHide()
         addListDropdownQuestion()
     }
 
