@@ -8248,3 +8248,12 @@ body {
   height: 25px;
 }
 
+.page-wrap .constr-wrap .questions-box .question-wrap .single-options-box-choice .single-option-choice .remove-single-choice, .page-wrap .constr-wrap .questions-box .question-wrap.question-multiple .single-options-box-choice .single-option-choice .remove-single-choice {
+  width: 15px;
+  height: 15px;
+  background: url(./../img/icon-remove.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}

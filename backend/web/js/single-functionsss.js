@@ -13,7 +13,7 @@ export function addSingleOption(questionId, pointId, text, itemsList, addClas = 
     let itemHtml =
         '<div class="radio-item' + addClas + '">' +
         '    <div class="remove-item"></div>' +
-        '    <textarea name="' + itemsName + '" rows="1" placeholder="������� ������">' + text + '</textarea>' +
+        '    <textarea name="' + itemsName + '" rows="1" placeholder="Введите текст">' + text + '</textarea>' +
         '<div class="hide-element__input">' +
         '<div class="option-item" style="width: 300px; position: absolute; left: -40px; top: 50px;">' +
         '<div class="value">' +
@@ -236,8 +236,8 @@ export function createSingleOptionChoice(question, singleOptionName, singleOptio
     //     return
     // }
 
-    $(singleOption).appendTo($(question).find('.single-options-box-choice')).insertBefore('.add-new-single-choice');
-
+    $(singleOption).appendTo($(question).find('.single-options-box-choice')).insertBefore($(question).find('.add-new-single-choice'));
+    console.log('добавил')
         customSelectActive();
 }
 
@@ -301,7 +301,8 @@ export function createSelectOfSingleQuestionsForHide(question) {
         return {
             name: $(el).find('.question-name textarea').val(),
             id: $(el)[0].dataset.id,
-            uniqueName: $(el).find('.question-name').find('textarea').prop('name')
+            uniqueName: $(el).find('.question-name').find('textarea').prop('name'),
+            nameLiQ: $(el).find('.question-name span').text() + $(el).find('.question-name textarea').val()
         }
     })
     let selectsQuestionName = $('.single-answer')
@@ -311,52 +312,16 @@ export function createSelectOfSingleQuestionsForHide(question) {
         select.html("")
         customSelect.html("")
         arrQuestions.each((id, question) => {
-            console.log(id, question)
-            console.log($(el))
             if (question.id == $(el).parents('.question-wrap')[0].dataset.id) {
                 return
             }
-            let createdOption = `<option value="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.name}</option>`;
-            let createdLi = `<li rel="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.name}</li>`;
+            let createdOption = `<option value="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.nameLiQ}</option>`;
+            let createdLi = `<li rel="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.nameLiQ}</li>`;
             select.append(createdOption)
             customSelect.append(createdLi)
         })
     })
 }
-
-// export function refreshAnswersForSingleQuestionsForHide() {
-//     let targetQuestions = $('.questions-list')
-//         .find('.question-wrap')
-//         .not('.focus')
-//         .filter('.question-single, .question-dropdown')
-//     let selectedQuestion = $('.single-options-box-choice .single-answer select option:selected')
-//     let id = selectedQuestion.data('question-for-hide')
-//
-//     let targetAnswerSelect = $('.single-option-choice').find('.single-hide-action-select')
-//     let targetAnswerList = targetAnswerSelect.parents('.single-action').find('ul')
-//
-//     targetAnswerSelect.html("")
-//     targetAnswerList.html("")
-//
-//     if($(targetQuestions[id]).hasClass('question-single')){
-//         let questionAnswersList = $(targetQuestions[id]).find('.radio-item textarea')
-//         for (let i = 0; i < questionAnswersList.length; i++){
-//             let optionAnswer = `<option value="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</option>`
-//             let liAnswer = `<li rel="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</li>`
-//             targetAnswerSelect.append(optionAnswer)
-//             targetAnswerList.append(liAnswer)
-//         }
-//     }else if($(targetQuestions[id]).hasClass('question-dropdown')){
-//         let questionAnswersList = $(targetQuestions[id]).find('.dropdown-wrap select option').not(':last')
-//         for (let i = 0; i < questionAnswersList.length; i++){
-//             let optionAnswer = `<option value="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</option>`
-//             let liAnswer = `<li rel="${$(questionAnswersList[i]).val()}">${$(questionAnswersList[i]).val()}</li>`
-//             targetAnswerSelect.append(optionAnswer)
-//             targetAnswerList.append(liAnswer)
-//         }
-//     }
-// }
-
 
 export function removeSingleOptionBlock(question, singleOption, singleOptionsCount) {
     if (singleOptionsCount > 1) {

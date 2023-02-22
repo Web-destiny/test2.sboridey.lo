@@ -155,7 +155,7 @@ function updateQuestionNameToRight(qustion, questionIndex, chapterIndex) {
     const dataId = $(qustion).attr('data-id');
     let newId;
     if (dataId != rightId) {
-        const $oldNameElements = $(qustion).find('[name]');
+        const $oldNameElements = $(qustion).find('[name]').not('.active');
         $oldNameElements.each((oldNameElementIndex, oldNameElement) => {
             let newName;
             let prevId = $(oldNameElement).attr('name').split('_');

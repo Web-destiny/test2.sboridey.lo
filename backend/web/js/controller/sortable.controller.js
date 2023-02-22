@@ -90,6 +90,69 @@ export function setQustionsSortableInChapter(sortableWrapper) {
         onEnd: () => {
             let chapter = $(sortableWrapper).closest('.chapter-wrapper');
             updateChapterQuestionsIndex(chapter);
+
+            let allChoices = $('.single-option-choice .single-action .select-options .active')
+            if($('.chapter-questions-list').children().length > 1){
+                let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+                $(allInputs).each(function (item) {
+                    if($(this).parent().hasClass('radio-item')){
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
+                    }else if($(this).parent().hasClass('value')){
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
+                    }
+
+                })
+                $(allChoices).each(function () {
+                    let nameLi = $(this).attr('name')
+                    let li = $(this)
+                    let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+                    if($(this)){
+                        $(allInputs).each(function (item) {
+                            let nameTextarea = $(this).attr('name')
+                            if (nameLi == nameTextarea) {
+                                if(nameLi == nameTextarea){
+                                    let selectedQuestionAttr = $(li).closest('.question-wrap').find('.question-name textarea').attr('name').slice(9)
+                                    if($(this).parent().hasClass('radio-item')){
+                                        let radioInputVal = $(this).parent('.radio-item').find('.hide-element__input input').attr('value')
+                                        if(radioInputVal){
+                                            $(this).parent('.radio-item').find('.hide-element__input input').attr('value', radioInputVal + ',' + selectedQuestionAttr)
+                                        }else{
+                                            $(this).parent('.radio-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                                        }
+                                    }else if($(this).parent().hasClass('value')){
+                                        let optionItemVal = $(this).closest('.option-item').find('.hide-element__input input').attr('value')
+                                        if(optionItemVal){
+                                            $(this).closest('.option-item').find('.hide-element__input input').attr('value', optionItemVal + ',' + selectedQuestionAttr)
+                                        }else{
+                                            $(this).closest('.option-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                                        }
+                                    }
+                                }
+
+
+                            }
+                        })
+                    }else{
+                        $(allInputs).each(function (item) {
+                            if($(this).parent().hasClass('radio-item')){
+                                $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
+                            }else if($(this).parent().hasClass('value')){
+                                $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
+                            }
+                        })
+                    }
+                })
+            }else{
+                let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+                $(allInputs).each(function (item) {
+                    if($(this).parent().hasClass('radio-item')){
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
+                    }else if($(this).parent().hasClass('value')){
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
+                    }
+
+                })
+            }
         },
     });
     sortableList.push(sortable);
