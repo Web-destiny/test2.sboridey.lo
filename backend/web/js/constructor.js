@@ -112,7 +112,13 @@ import {
     createSingleOptionChoice,
     removeSingleChoiceOption,
     refreshSingleChoiceElemNames,
-    createSelectOfSingleQuestionsForHide
+    createSelectOfSingleQuestionsForHide,
+    clearSelectStyledHideQuestions,
+    insertValueToHiddenInput,
+    refreshListAnswersForQuestionsHide,
+    updateValueToHiddenInputs,
+    clearBeforeRefreshHiddenInput,
+    getListAnswersForQuestionsHide,
 } from "./single-functionsss.js"
 
 jQuery(document).ready(function () {
@@ -237,6 +243,8 @@ jQuery(document).ready(function () {
     let fakeInput = '<input type="number" name="fakeInput" class="fakeInput" value="0" hidden>';
     $('.questions-list').append(fakeInput);
 
+    let elements = []
+
     //dropped question
     $('.questions-box').droppable({
         drop: function (event, ui) {
@@ -261,12 +269,12 @@ jQuery(document).ready(function () {
                         if(allChoices[0]){
                             clearBeforeRefreshHiddenInput()
                             $(allChoices).each(function () {
-                                console.log($(this))
                                 updateValueToHiddenInputs($(this))
                             })
                         }else{
                             clearBeforeRefreshHiddenInput()
                         }
+
                     }
                     if (type == 'ranging') {
                         setSortbaleRanging();
@@ -294,6 +302,7 @@ jQuery(document).ready(function () {
                     } else {
                         makeFakeChapter()
                         id = appendInde + 1;
+
                     }
                     if (type && id) {
                         // addQuestion(type, appendInde, id);
@@ -479,6 +488,7 @@ jQuery(document).ready(function () {
     $('.constr-wrap').on('click', '.remove-chapter', function () {
         const $chapter = $(this).parents('.chapter-wrapper');
         deleteChapter($chapter);
+        createSelectOfSingleQuestionsForHide()
         if ($('.chapter-wrapper').length === 0) {
             $('.chapter-position-btn').fadeOut();
             $('.questions-box').addClass('empty');
@@ -600,6 +610,10 @@ jQuery(document).ready(function () {
     //show eyes-hidden func
 
     $('.constr-wrap').on('change', '.control-panel .question-visability input[type="checkbox"]', function () {
+        let targetQuestionDataID = $(this).closest('.question-wrap').find('.question-name textarea').attr('name')
+        if(targetQuestionDataID == 'question_1_1'){
+            $(this).prop('checked', false)
+        }
        if($(this).is(':checked')){
            $(this).closest('.question-wrap').find('.question-view-hide').fadeIn(300);
        }else{
@@ -634,7 +648,8 @@ jQuery(document).ready(function () {
             $('.fakeInput').attr('value', 0)
         }
         removeQuestion(question);
-
+        createSelectOfSingleQuestionsForHide()
+        clearSelectStyledHideQuestions()
         let allChoices = $('.single-option-choice .single-action .select-options .active')
         if($('.chapter-questions-list').children().length > 1){
             clearBeforeRefreshHiddenInput()
@@ -862,12 +877,18 @@ jQuery(document).ready(function () {
                 addSingleOption(questionId, pointId, text, itemsList);
                 addSingleAlternative(questionId, pointId, alternativesList);
                 addListSingleQuestion()
-                createSelectOfSingleQuestionsForHide()
             }
             clear_form_elements($(this).parents('.input-new-item-wrap'));
             createSelectOfSingleAnswer($(thisQuestion[0]))
             countOfSingleAnswer($(thisQuestion[0]))
+            refreshListAnswersForQuestionsHide(thisQuestion)
         }
+    });
+
+    $('.content-wrap').on('keyup', '.question-single .radio-item textarea', function (e) {
+        $(this).text($(this).val())
+        let question = $(this).parents('.question-wrap');
+        refreshListAnswersForQuestionsHide(question)
     });
 
     // Add options to chapter Settings Select
@@ -911,6 +932,7 @@ jQuery(document).ready(function () {
         removeSingleOption(itemEl);
         createSelectOfSingleAnswer(thisQuestion)
         countOfSingleAnswer(thisQuestion)
+        refreshListAnswersForQuestionsHide(thisQuestion)
     });
 
     //change visability for single option
@@ -948,7 +970,27 @@ jQuery(document).ready(function () {
     //after change name for question rename options for alternative selector
     $('.content-wrap').on('change', '.questions-list .question-single textarea', function (e) {
         addListSingleQuestion()
-        createSelectOfSingleQuestionsForHide()
+    })
+
+    // рефреш select-styled и li в списке hide вопросов при изменении названия вопроса
+    $('.content-wrap').on('change', '.questions-list .question-wrap .question-name textarea', function (e) {
+        let nameTextarea = $(this).attr('name')
+        let textForUpdate = $(this).prev().text() + $(this).val()
+        let currentLi = $('.questions-list .question-wrap .single-answer .select-options li')
+        currentLi.each(function () {
+            if($(this).attr('name') == nameTextarea){
+                $(this).text(textForUpdate)
+                if($(this).hasClass('active')){
+                    let currentSpan = $(this).parent().prev()
+                    currentSpan.text(textForUpdate)
+                }
+            }
+        })
+    })
+
+    // кладу номер вопроса для скрытия в инпут (армена) по выбору в селекте
+    $('.content-wrap').on('click', '.questions-list .question-wrap .single-action li', function () {
+        insertValueToHiddenInput($(this))
     })
 
     //get list of answer form target question
@@ -982,129 +1024,6 @@ jQuery(document).ready(function () {
             getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer)
         }
     })
-    //функция которая выводит лист вариантов ответов для селекта с вопросами hide
-    function getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer){
-        let select = targetAnswerSelect.find('select')
-        let customSelect = targetAnswerSelect.find('.select-options')
-        select.html("")
-        customSelect.html("")
-        listAnswer.each(function (id, el) {
-            let answerText;
-            if($(el).text() != ''){
-                answerText = $(el).text()
-                let textareaName = $(el).prop('name')
-                if(textareaName == undefined){
-                    let dropOptionLi =  $(el).closest('.question-dropdown').find('.optins-list .option-item')[id]
-                    textareaName = $(dropOptionLi).find('.inputpoint-body input').prop('name')
-                }
-                let createdOption = `<option value="${answerText}" name="${textareaName}">${answerText}</option>`;
-                let createdLi = `<li rel="${answerText}" name="${textareaName}">${answerText}</li>`;
-                select.append(createdOption)
-                customSelect.append(createdLi)
-            }else{
-                return
-            }
-        })
-    }
-
-    // кладу номер вопроса для скрытия в инпут (армена) по выбору в селекте
-    $('.content-wrap').on('click', '.questions-list .question-wrap .single-action li', function () {
-        insertValueToHiddenInput($(this))
-    })
-
-    // функция которая чистит hidden input перед его обновлением
-    function clearBeforeRefreshHiddenInput() {
-        let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
-        $(allInputs).each(function (item) {
-            if($(this).parent().hasClass('radio-item')){
-                $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
-            }else if($(this).parent().hasClass('value')){
-                $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
-            }
-
-        })
-    }
-
-    // рефрешит инпут после изменений
-    function updateValueToHiddenInputs(el){
-        let nameLi = el.attr('name')
-        let li = el
-        let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
-        if(el){
-            $(allInputs).each(function (item) {
-                let nameTextarea = $(this).attr('name')
-                if (nameLi == nameTextarea) {
-                        let selectedQuestionAttr = $(li).closest('.question-wrap').find('.question-name textarea').attr('name').slice(9)
-                        if($(this).parent().hasClass('radio-item')){
-                            let radioInputVal = $(this).parent('.radio-item').find('.hide-element__input input').attr('value')
-                            if(radioInputVal){
-                                $(this).parent('.radio-item').find('.hide-element__input input').attr('value', radioInputVal + ',' + selectedQuestionAttr)
-                            }else{
-                                $(this).parent('.radio-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
-                            }
-                        }else if($(this).parent().hasClass('value')){
-                            let optionItemVal = $(this).closest('.option-item').find('.hide-element__input input').attr('value')
-                            if(optionItemVal){
-                                $(this).closest('.option-item').find('.hide-element__input input').attr('value', optionItemVal + ',' + selectedQuestionAttr)
-                            }else{
-                                $(this).closest('.option-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
-                            }
-                        }
-                }
-            })
-        }else{
-            $(allInputs).each(function (item) {
-                    if($(this).parent().hasClass('radio-item')){
-                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
-                    }else if($(this).parent().hasClass('value')){
-                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
-                    }
-            })
-        }
-    }
-
-    function insertValueToHiddenInput(el){
-        let nameLi = el.attr('name')
-        let li = el
-        let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
-        // console.log(nameLi, li, el)
-        if(el.hasClass('active')){
-            setTimeout(() => {
-                let allChoices = $('.single-option-choice .single-action .select-options .active')
-                if($('.chapter-questions-list').children().length > 1){
-                    clearBeforeRefreshHiddenInput()
-                    $(allChoices).each(function () {
-                        updateValueToHiddenInputs($(this))
-                    })
-                }else{
-                    clearBeforeRefreshHiddenInput()
-                }
-            }, 0 )
-        }else{
-            $(allInputs).each(function (item) {
-                let nameTextarea = $(this).attr('name')
-                if(nameLi == nameTextarea){
-                    let selectedQuestionAttr = $(li).closest('.question-wrap').find('.question-name textarea').attr('name').slice(9)
-                    if($(this).parent().hasClass('radio-item')){
-                        let radioInputVal = $(this).parent('.radio-item').find('.hide-element__input input').attr('value')
-                        if(radioInputVal){
-                            $(this).parent('.radio-item').find('.hide-element__input input').attr('value', radioInputVal + ',' + selectedQuestionAttr)
-                        }else{
-                            $(this).parent('.radio-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
-                        }
-                    }else if($(this).parent().hasClass('value')){
-                        let optionItemVal = $(this).closest('.option-item').find('.hide-element__input input').attr('value')
-                        if(optionItemVal){
-                            $(this).closest('.option-item').find('.hide-element__input input').attr('value', optionItemVal + ',' + selectedQuestionAttr)
-                        }else{
-                            $(this).closest('.option-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
-                        }
-                    }
-                }
-            })
-        }
-    }
-
 
     //show single options add other or comment
     $('.content-wrap').on('change', '.question-wrap .show-hidden-opt', function (e) {
@@ -1711,7 +1630,8 @@ jQuery(document).ready(function () {
         }
         createSelectOfDropdownAnswer($(question[0]))
         countOfDropdownAnswer($(question[0]))
-    });
+        refreshListAnswersForQuestionsHide(question)
+    })
 
     //remove option from select on X click
     $('.content-wrap').on('click', '.question-dropdown .option-item .remove-dropdown-el', function (e) {
@@ -1729,6 +1649,7 @@ jQuery(document).ready(function () {
             $(question[0]).find('.select-styled').text('');
         }
         countOfDropdownAnswer($(question[0]))
+        refreshListAnswersForQuestionsHide(question)
     })
 
     $('.content-wrap').on('click', '.question-dropdown .option-item .watch-options', function (e) {

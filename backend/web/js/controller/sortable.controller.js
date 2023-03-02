@@ -6,6 +6,11 @@ import {
     resetChapterSettingSelect,
     updateChaptersIndex
 } from '../chapters.js'
+import {
+    createSelectOfSingleQuestionsForHide,
+    clearSelectStyledHideQuestions
+} from '../single-functionsss.js';
+
 //} from '../chapters.js?89411532423409823'
 
 let sortableList = [];
@@ -153,6 +158,8 @@ export function setQustionsSortableInChapter(sortableWrapper) {
 
                 })
             }
+            createSelectOfSingleQuestionsForHide()
+            clearSelectStyledHideQuestions()
         },
     });
     sortableList.push(sortable);

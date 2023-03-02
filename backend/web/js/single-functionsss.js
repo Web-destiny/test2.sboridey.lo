@@ -183,6 +183,162 @@ export function createSingleOptionBlock(question, singleName) {
     customSelectActive();
 }
 
+// очистка select-styled
+
+export  function clearSelectStyledHideQuestions(){
+    // $('.questions-list .question-wrap').each(function () {
+    //     $(this).find('.single-answer .select-styled').text('')
+    // })
+}
+
+//функция рефрешинга листа вариантов ответов
+
+export function refreshListAnswersForQuestionsHide(targetQuestion){
+    console.log('refreshListAnswersForQuestionsHide')
+    if(targetQuestion.hasClass('question-single')){
+        let targetQName = targetQuestion.find('.question-name textarea').attr('name')
+        $('.question-wrap .single-answer .select-options .active').each(function () {
+            if($(this).attr('name') == targetQName){
+                let selectedLiQ = $(this)
+                let listAnswer = targetQuestion.find('.radio-btns-wrapper .radio-item textarea')
+                let targetAnswerSelect = selectedLiQ.parents('.single-option-choice').find('.single-action')
+                getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer)
+            }
+        })
+    }else if(targetQuestion.hasClass('question-dropdown')){
+        let targetQName = targetQuestion.find('.question-name textarea').attr('name')
+        $('.question-wrap .single-answer .select-options .active').each(function () {
+            if($(this).attr('name') == targetQName){
+                let selectedLiQ = $(this)
+                let listAnswer = targetQuestion.find('.dropdown-wrap .select-options li')
+                let targetAnswerSelect = selectedLiQ.parents('.single-option-choice').find('.single-action')
+                getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer)
+            }
+        })
+    }
+}
+
+//функция которая выводит лист вариантов ответов для селекта с вопросами hide
+export function getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer){
+    console.log('getListAnswersForQuestionsHide')
+    let select = targetAnswerSelect.find('select')
+    let customSelect = targetAnswerSelect.find('.select-options')
+    select.html("")
+    customSelect.html("")
+    listAnswer.each(function (id, el) {
+        let answerText;
+        if($(el).text() != ''){
+            answerText = $(el).text()
+            let textareaName = $(el).prop('name')
+            if(textareaName == undefined){
+                let dropOptionLi =  $(el).closest('.question-dropdown').find('.optins-list .option-item')[id]
+                textareaName = $(dropOptionLi).find('.inputpoint-body input').prop('name')
+            }
+            let createdOption = `<option value="${answerText}" name="${textareaName}">${answerText}</option>`;
+            let createdLi = `<li rel="${answerText}" name="${textareaName}">${answerText}</li>`;
+            select.append(createdOption)
+            customSelect.append(createdLi)
+        }else{
+            return
+        }
+    })
+}
+
+
+
+// функция которая чистит hidden input перед его обновлением
+export function clearBeforeRefreshHiddenInput() {
+    let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+    $(allInputs).each(function (item) {
+        if($(this).parent().hasClass('radio-item')){
+            $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
+        }else if($(this).parent().hasClass('value')){
+            $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
+        }
+
+    })
+}
+
+// рефрешит инпут после изменений
+export function updateValueToHiddenInputs(el){
+    let nameLi = el.attr('name')
+    let li = el
+    let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+    if(el){
+        $(allInputs).each(function (item) {
+            let nameTextarea = $(this).attr('name')
+            if (nameLi == nameTextarea) {
+                let selectedQuestionAttr = $(li).closest('.question-wrap').find('.question-name textarea').attr('name').slice(9)
+                if($(this).parent().hasClass('radio-item')){
+                    let radioInputVal = $(this).parent('.radio-item').find('.hide-element__input input').attr('value')
+                    if(radioInputVal){
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', radioInputVal + ',' + selectedQuestionAttr)
+                    }else{
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                    }
+                }else if($(this).parent().hasClass('value')){
+                    let optionItemVal = $(this).closest('.option-item').find('.hide-element__input input').attr('value')
+                    if(optionItemVal){
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', optionItemVal + ',' + selectedQuestionAttr)
+                    }else{
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                    }
+                }
+            }
+        })
+    }else{
+        $(allInputs).each(function (item) {
+            if($(this).parent().hasClass('radio-item')){
+                $(this).parent('.radio-item').find('.hide-element__input input').attr('value', '')
+            }else if($(this).parent().hasClass('value')){
+                $(this).closest('.option-item').find('.hide-element__input input').attr('value', '')
+            }
+        })
+    }
+}
+
+export function insertValueToHiddenInput(el){
+    let nameLi = el.attr('name')
+    let li = el
+    let allInputs = $('.questions-list .radio-item textarea, .questions-list .question-dropdown .option-item .inputpoint-body input')
+    // console.log(nameLi, li, el)
+    if(el.hasClass('active')){
+        setTimeout(() => {
+            let allChoices = $('.single-option-choice .single-action .select-options .active')
+            if($('.chapter-questions-list').children().length > 1){
+                clearBeforeRefreshHiddenInput()
+                $(allChoices).each(function () {
+                    updateValueToHiddenInputs($(this))
+                })
+            }else{
+                clearBeforeRefreshHiddenInput()
+            }
+        }, 0 )
+    }else{
+        $(allInputs).each(function (item) {
+            let nameTextarea = $(this).attr('name')
+            if(nameLi == nameTextarea){
+                let selectedQuestionAttr = $(li).closest('.question-wrap').find('.question-name textarea').attr('name').slice(9)
+                if($(this).parent().hasClass('radio-item')){
+                    let radioInputVal = $(this).parent('.radio-item').find('.hide-element__input input').attr('value')
+                    if(radioInputVal){
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', radioInputVal + ',' + selectedQuestionAttr)
+                    }else{
+                        $(this).parent('.radio-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                    }
+                }else if($(this).parent().hasClass('value')){
+                    let optionItemVal = $(this).closest('.option-item').find('.hide-element__input input').attr('value')
+                    if(optionItemVal){
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', optionItemVal + ',' + selectedQuestionAttr)
+                    }else{
+                        $(this).closest('.option-item').find('.hide-element__input input').attr('value', selectedQuestionAttr)
+                    }
+                }
+            }
+        })
+    }
+}
+
 export function createSingleChoiceToHide(question, singleName) {
     let singleOptionBlock =
         `<div class="single-options-box-choice">
@@ -237,7 +393,6 @@ export function createSingleOptionChoice(question, singleOptionName, singleOptio
     // }
 
     $(singleOption).appendTo($(question).find('.single-options-box-choice')).insertBefore($(question).find('.add-new-single-choice'));
-    console.log('добавил')
         customSelectActive();
 }
 
@@ -295,12 +450,16 @@ export function createSelectOfSingleAnswer(question) {
     customSelectActive();
 }
 // (ДЛЯ HIDE QUESTION) функция которая делает селект из вопросов
+
 export function createSelectOfSingleQuestionsForHide(question) {
+
     let singlesList = $('.question-wrap').filter('.question-single, .question-dropdown')
     let arrQuestions = singlesList.map((id, el) => {
         return {
             name: $(el).find('.question-name textarea').val(),
             id: $(el)[0].dataset.id,
+            idRazdel: $(el)[0].dataset.id.slice(0,1),
+            idNomer: $(el)[0].dataset.id.slice(2,3),
             uniqueName: $(el).find('.question-name').find('textarea').prop('name'),
             nameLiQ: $(el).find('.question-name span').text() + $(el).find('.question-name textarea').val()
         }
@@ -315,10 +474,14 @@ export function createSelectOfSingleQuestionsForHide(question) {
             if (question.id == $(el).parents('.question-wrap')[0].dataset.id) {
                 return
             }
-            let createdOption = `<option value="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.nameLiQ}</option>`;
-            let createdLi = `<li rel="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.nameLiQ}</li>`;
-            select.append(createdOption)
-            customSelect.append(createdLi)
+            let idRazdelTarget = $(el).parents('.question-wrap')[0].dataset.id.slice(0,1)
+            let idNomerTarget = $(el).parents('.question-wrap')[0].dataset.id.slice(2,3)
+            if(Number(idRazdelTarget + idNomerTarget) > Number(question.idRazdel + question.idNomer) ){
+                let createdOption = `<option value="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.nameLiQ}</option>`;
+                let createdLi = `<li rel="${question.name}" data-id="${question.id}" name="${question.uniqueName}">${question.nameLiQ}</li>`;
+                select.append(createdOption)
+                customSelect.append(createdLi)
+            }
         })
     })
 }
