@@ -20,7 +20,7 @@ use yii\helpers\Html;
                 </div>
             </div>
             <div class="btn-wrap">
-                <button type="submit" class="btn-default btn-submit">Создать</button>
+                <button type="submit" style="margin-bottom: 15px" class="btn-default btn-submit">Создать</button>
             </div>
         </div>
     <?= Html::endForm(); ?>
@@ -44,6 +44,18 @@ use yii\helpers\Html;
         </div>
     </div>
 </div>
+<div class="kvot-wrap">
+    <div class="kvot-box">
+        <div class="kvot-title">Квотирование:</div>
+        <div class="input-check kvot-switcher">
+            <label class="switch">
+                <input type="checkbox" name="" class="show-hidden" data-hidden=".link-hidden">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+</div>
+<script src="/js/custom_select.js"></script>
 <script>
     const [linksAmount, linksBtn] = [$('#links_amount'), $('.links-form .btn-submit')];
 
@@ -125,4 +137,87 @@ use yii\helpers\Html;
             $('.message-overlay').fadeOut();
         }
     });
+
+    $('.kvot-wrap').on('change', '.kvot-box .kvot-switcher input[type="checkbox"]', function () {
+        if($(this).is(':checked')){
+            createKvotBlock()
+        }else{
+            removeKvotBlock()
+        }
+    });
+
+    $('.kvot-wrap').on('change', '.kvot-hide-content .kvot-set-condition .kvot-conditions-switcher input[type="checkbox"]', function () {
+            if($(this).is(':checked')){
+                createKvotConditions()
+            }else{
+                removeKvotConditions()
+            }
+    })
+
+    function createKvotBlock() {
+        let kvotBlock =
+            `<div class="kvot-hide-content">
+                <div class="input-number-box">
+                    <div>Завершить опрос при получении</div>
+                    <div class="input-wrap input-number">
+                        <button class="decrement">-</button>
+                        <input type="number" id="links_amount" name="survey_links_count" placeholder="0" max="" />
+                        <button class="increment">+</button>
+                    </div>
+                    <div>ответов</div>
+                </div>
+                <div class="kvot-set-condition">
+                    <div class="input-check kvot-conditions-switcher">
+                        <label class="switch">
+                            <input type="checkbox" name="" class="show-hidden" data-hidden=".link-hidden">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="kvot-set-title">Задать условия квотирования</div>
+                </div>
+            </div>`;
+        $('.kvot-wrap').append(kvotBlock)
+    }
+    function removeKvotBlock() {
+        $('.kvot-hide-content').remove()
+    }
+
+    function createKvotConditions() {
+        let kvotConditionsBlock =
+            `<div class="kvot-set-separately-box">
+                    <div class="kvot-set-separately">
+                        <div class="input-check">
+                        <label class="switch">
+                            <input type="checkbox" name="" class="show-hidden" data-hidden=".link-hidden">
+                            <span class="slider round"></span>
+                        </label>
+                        </div>
+                        <div class="kvot-set-title">Отдельная квота для каждого вопроса</div>
+                    </div>
+
+                    <div class="customselect-wrapper kvot-questions-select"">
+                        <div class="select">
+                            <select class="customselect single-hide-answer-select select-hidden">
+                                <option value="" data-id="" name="">
+                                </option>
+                            </select>
+                            <div class="select-styled">
+                              Выберите вопрос
+                            </div>
+                            <ul class="select-options" style="display: none;">
+                                <li rel="" data-id="" name="" class="">
+                                </li>
+                            </ul>
+                            </div>
+                    </div>
+                </div>
+`;
+        $('.kvot-wrap .kvot-hide-content').append(kvotConditionsBlock)
+        customSelectActive()
+    }
+    function removeKvotConditions() {
+        $('.kvot-set-separately-box').remove()
+    }
+
+
 </script>

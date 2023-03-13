@@ -774,26 +774,28 @@
 
 
             <div class="container" id="consultation">
-                <h2 data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">Остались вопросы? Запишитесь на консультацию</h2>
-                <form data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000" class="contact-form" id="form" action="">
-                    <div class="сontact-form__left">
-                        <input id="name" name="name" required placeholder="Имя" type="text">
-                        <input id="email" name="email" required placeholder="Email" type="email">
-                        <input id="phone" name="phone" required placeholder="Телефон" type="tel">
-                        <textarea id="comment" name="comment" required placeholder="Какие остались вопросы?"></textarea>
-                    </div>
-                    <div class="сontact-form__right">
-                        <button class="gradient-button" type="submit" data-target="#sendEmailModal">Записаться</button>
-                        <div class="consultation-agreement">
-                            Нажимая кнопку «Записаться», я даю Согласие на обработку моих
-                            <a href="https://servizoria.bitrix24.ru/bitrix/tools/disk/uf.php?attachedId=221857&action=download&ncc=1">
-                                персональных данных
-                            </a>
-                        </div>
-                    </div>
-                    <div class="success">Спасибо за обращение! Мы скоро с Вами свяжемся.</div>
-                    <div class="error">Ошибка отправки сообщения.</div>
-                </form>
+                <script data-b24-form="inline/11/pye31o" data-skip-moving="true">(function(w,d,u){var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);})(window,document,'https://cdn-ru.bitrix24.ru/b12896033/crm/form/loader_11.js');</script>
+
+                <!--                <h2 data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">Остались вопросы? Запишитесь на консультацию</h2>-->
+<!--                <form data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000" class="contact-form" id="form" action="">-->
+<!--                    <div class="сontact-form__left">-->
+<!--                        <input id="name" name="name" required placeholder="Имя" type="text">-->
+<!--                        <input id="email" name="email" required placeholder="Email" type="email">-->
+<!--                        <input id="phone" name="phone" required placeholder="Телефон" type="tel">-->
+<!--                        <textarea id="comment" name="comment" required placeholder="Какие остались вопросы?"></textarea>-->
+<!--                    </div>-->
+<!--                    <div class="сontact-form__right">-->
+<!--                        <button class="gradient-button" type="submit" data-target="#sendEmailModal">Записаться</button>-->
+<!--                        <div class="consultation-agreement">-->
+<!--                            Нажимая кнопку «Записаться», я даю Согласие на обработку моих-->
+<!--                            <a href="https://servizoria.bitrix24.ru/bitrix/tools/disk/uf.php?attachedId=221857&action=download&ncc=1">-->
+<!--                                персональных данных-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="success">Спасибо за обращение! Мы скоро с Вами свяжемся.</div>-->
+<!--                    <div class="error">Ошибка отправки сообщения.</div>-->
+<!--                </form>-->
             </div>
         </section>
     </main>

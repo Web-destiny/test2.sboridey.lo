@@ -76,8 +76,8 @@
 		height: 100%;
 		position: fixed;
 		left: 0;
-    top: 0;
-    background: linear-gradient(90deg, #AD7DF8 0%, #849DF8 100%);
+		top: 0;
+		background: linear-gradient(90deg, #AD7DF8 0%, #849DF8 100%);
 	}
 
 	.page-navigation a {
@@ -107,8 +107,8 @@
 		background-size: cover;
 		z-index: 6;
 		position: fixed;
-    top: 15px;
-    right: 15px;
+		top: 15px;
+		right: 15px;
 	}
 
 	.page-header .container {
@@ -282,7 +282,7 @@
 	}
 
 	.quality .container:nth-child(2) {
-		 grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr 1fr;
 	}
 
 	.personality-image {
@@ -738,3 +738,50 @@
 @media (max-width: 360px) {
 
 }
+
+@media (min-width: 600px) {
+	/*.contact-us form button {*/
+	/*	padding: 17px 80px;*/
+	/*	border-radius: 61px;*/
+	/*	background: linear-gradient(90deg, #AD7DF8 0%, #849DF8 100%);*/
+	/*	display: flex;*/
+	/*	align-items: center;*/
+	/*	justify-content: center;*/
+	/*	font-size: 18px;*/
+	/*	line-height: 21.13px;*/
+	/*	font-weight: 700;*/
+	/*	color: #fff;*/
+	/*	border: 0;*/
+	/*}*/
+	.consultation-agreement {
+		max-width: 230px;
+		font-size: 11px;
+		line-height: 15px;
+		padding-top: 7px;
+	}
+}
+
+@media (min-width: 800px) {
+	/*.contact-us form button {*/
+	/*	padding: 23px 120px;*/
+	/*	border-radius: 61px;*/
+	/*	background: linear-gradient(90deg, #AD7DF8 0%, #849DF8 100%);*/
+	/*	display: flex;*/
+	/*	align-items: center;*/
+	/*	justify-content: center;*/
+	/*	font-size: 18px;*/
+	/*	line-height: 21.13px;*/
+	/*	font-weight: 700;*/
+	/*	color: #fff;*/
+	/*	border: 0;*/
+	/*}*/
+	.consultation-agreement {
+		max-width: 280px;
+		font-size: 11px;
+		line-height: 15px;
+		padding-top: 7px;
+	}
+}
+
+
+

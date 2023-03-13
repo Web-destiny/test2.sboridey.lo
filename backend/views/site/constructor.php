@@ -45,9 +45,14 @@ use yii\helpers\Url;
                         <?php echo  \Yii::t('app', 'Дизайн'); ?>
                     </a>
                 </div>
-                <div class="menu-item active">
+                <div class="menu-item">
                     <a href="<?php echo Url::to(['/site/update-pool', 'survey_id' => $survey->id]); ?>">
                         Редактировать описание
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a href="<?php echo Url::to(['site/survey-url', 'id' => $survey->id]);  ?>">
+                        Респонденты
                     </a>
                 </div>
             </div>

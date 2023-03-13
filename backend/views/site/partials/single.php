@@ -20,7 +20,7 @@
                 <?php endif; ?>
 
                 <div class="radio-item">
-                    <input type="<?php echo $elType; ?>" name="q-<?php echo $element['element_order']  ?>-1" id="q-<?php echo $element['element_order']  ?>-<?php echo $n; ?>" value="Вариант ответа">
+                    <input type="<?php echo $elType; ?>" name="q-<?php echo $element['element_order']  ?>-<?php echo $n; ?>" id="q-<?php echo $element['element_order']  ?>-<?php echo $n; ?>" value="Вариант ответа">
                     <label for="q-<?php echo $element['element_order']  ?>-<?php echo $n; ?>">
                         <?php  if($res)  echo $item; ?>
                     </label>

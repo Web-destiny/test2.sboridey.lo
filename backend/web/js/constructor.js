@@ -1003,12 +1003,34 @@ jQuery(document).ready(function () {
         select.html("")
         customSelect.html("")
         listAnswer.each(function (id, el) {
+            let textareaName = $(el).prop('name')
             let answerText = $(el).val()
-            let createdOption = `<option value="${answerText}">${answerText}</option>`;
-            let createdLi = `<li rel="${answerText}">${answerText}</li>`;
+            let createdOption = `<option value="${answerText}" name="${textareaName}">${answerText}</option>`;
+            let createdLi = `<li rel="${answerText}" name="${textareaName}">${answerText}</li>`;
             select.append(createdOption)
             customSelect.append(createdLi)
         })
+    })
+    $('.content-wrap').on('click', '.questions-list .question-wrap .single-inputpoint-customselect-answer li', function (){
+        setTimeout( () => {
+            let labelNum = $(this).closest('.alternatives-item').find('.switch-row > .label:first-child').text().slice(0,1)
+            let targetRadio = $(this).closest('.question-wrap').find('.radio-btns-wrapper .radio-item')[labelNum - 1]
+            let key = $(this).attr('name')
+            let value = $(targetRadio).find('textarea').attr('name')
+            if($(this).hasClass('active')){
+                if(localStorage.getItem(key)){
+                    let arr = JSON.parse(localStorage.getItem(key))
+                    arr.push(value)
+                    localStorage.setItem(key, JSON.stringify(arr))
+                }else{
+                    localStorage.setItem(key, JSON.stringify(value.split()))
+                }
+            }else{
+                let arr = JSON.parse(localStorage.getItem(key))
+                arr = arr.filter(function(f) { return f !== value })
+                localStorage.setItem(key, JSON.stringify(arr))
+            }
+        }, 0)
     })
 
     // слушатель на лист ответов вопросов в функции "eye-hide" для сингла
@@ -1018,6 +1040,9 @@ jQuery(document).ready(function () {
             let listAnswer = targetQuestion.find('.radio-btns-wrapper .radio-item textarea')
             let targetAnswerSelect = $(this).parents('.single-option-choice').find('.single-action')
             getListAnswersForQuestionsHide(targetAnswerSelect, listAnswer)
+            let defaultText = `<div class="default">Выберите ответ</div>`
+            $(this).closest('.single-option-choice').find('.single-action .select-styled').empty()
+            $(this).closest('.single-option-choice').find('.single-action .select-styled').append(defaultText)
         }else if(targetQuestion.hasClass('question-dropdown')){
             let listAnswer = targetQuestion.find('.dropdown-wrap .select-options li')
             let targetAnswerSelect = $(this).parents('.single-option-choice').find('.single-action')
